@@ -5,6 +5,7 @@ import com.example.demo.repository.MovieRepo;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -14,6 +15,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
                 "spring.security.user.roles=ADMIN"
         }
 )
+@ActiveProfiles(profiles = "test")
 public abstract class BaseTestClass {
     @LocalServerPort
     protected int port;
