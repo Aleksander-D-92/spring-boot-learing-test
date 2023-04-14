@@ -14,6 +14,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 
 @Slf4j
 @SpringBootTest(
@@ -51,19 +52,26 @@ public abstract class BaseTestClass {
     }
 
     private static void initWireMockStubs() {
-        byte[] filmsResponse = TestFileUtil.readFileAsString("src/test/resources/film-response.json");
-        wireMockServer.stubFor(WireMock.get("/films")
+        buildWireMockGetStub("src/test/resources/film-response.json", "/films");
+        buildWireMockGetStub("src/test/resources/people-response.json", "/people");
+    }
+
+    private static void buildWireMockGetStub(String classPath, String route) {
+        byte[] response = TestFileUtil.readFileAsString(classPath);
+        wireMockServer.stubFor(WireMock.get(route)
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(filmsResponse)));
+                        .withBody(response)));
+    }
 
-        byte[] peopleResponse = TestFileUtil.readFileAsString("src/test/resources/people-response.json");
-        wireMockServer.stubFor(WireMock.get("/people")
+    private static void buildWireMockPostStub(String classPath, String route) {
+        byte[] response = TestFileUtil.readFileAsString(classPath);
+        wireMockServer.stubFor(WireMock.post(route)
+                .withRequestBody(equalToJson("{\"name\":  \"pesho\"}"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody(peopleResponse)));
-
+                        .withBody(response)));
     }
 }
