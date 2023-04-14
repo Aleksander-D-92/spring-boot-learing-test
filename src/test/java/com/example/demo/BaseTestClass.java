@@ -22,7 +22,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
         properties = {
                 "spring.security.user.name=pesho",
                 "spring.security.user.password=1234",
-                "spring.security.user.roles=ADMIN"
+                "spring.security.user.roles=ADMIN",
+                "spring.profiles.active=test" // can use this or @ActiveProfiles(profiles = "test")
         }
 )
 @ActiveProfiles(profiles = "test")
@@ -34,11 +35,10 @@ public abstract class BaseTestClass {
     @SpyBean
     public ActorRepo actorRepo;
 
-    protected static WireMockServer wireMockServer;
+    protected static WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8888));
 
     @BeforeAll
     static void startWireMock() {
-        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8888));
         wireMockServer.start();
         log.info("\n{}\nWiremock server started on: {}\n{}", "*".repeat(70), wireMockServer.baseUrl(), "*".repeat(70));
         initWireMockStubs();
