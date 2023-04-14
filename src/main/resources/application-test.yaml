@@ -15,4 +15,6 @@ spring:
           batch_size: 1000
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-
+integration:
+  star-wars-api: http://localhost:8888
+  other-api: http://localhost:8888

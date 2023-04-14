@@ -4,6 +4,7 @@ import com.example.demo.BaseTestClass;
 import com.example.demo.dto.Actors;
 import com.example.demo.dto.Movies;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ControllerTest2 extends BaseTestClass {
 
     @Test
