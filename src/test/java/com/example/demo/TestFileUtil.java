@@ -6,13 +6,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TestFileUtil {
-    public static byte[] readFileAsString(String fileName) {
+    public static byte[] fileToByteArray(String fileName) {
         Path path = Path.of(fileName);
         byte[] bytes;
         try {
             bytes = Files.readAllBytes(path);
-            System.out.println(new String(bytes, StandardCharsets.UTF_8));
             return bytes;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String fileToString(String fileName) {
+        Path path = Path.of(fileName);
+        byte[] bytes;
+        try {
+            bytes = Files.readAllBytes(path);
+            return new String(bytes, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

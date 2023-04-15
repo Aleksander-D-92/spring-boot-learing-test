@@ -2,17 +2,22 @@ package com.example.demo;
 
 import com.example.demo.repository.ActorRepo;
 import com.example.demo.repository.MovieRepo;
+import com.example.demo.service.RepositoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 
+import static com.example.demo.TestFileUtil.fileToByteArray;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 
@@ -34,6 +39,10 @@ public abstract class BaseTestClass {
     public MovieRepo movieRepo;
     @SpyBean
     public ActorRepo actorRepo;
+    @MockBean
+    public RepositoryService repositoryService;
+    @Autowired
+    public ObjectMapper objectMapper;
 
     protected static WireMockServer wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8888));
 
@@ -57,7 +66,7 @@ public abstract class BaseTestClass {
     }
 
     private static void buildWireMockGetStub(String classPath, String route) {
-        byte[] response = TestFileUtil.readFileAsString(classPath);
+        byte[] response = fileToByteArray(classPath);
         wireMockServer.stubFor(WireMock.get(route)
                 .willReturn(aResponse()
                         .withStatus(200)
@@ -66,7 +75,7 @@ public abstract class BaseTestClass {
     }
 
     private static void buildWireMockPostStub(String classPath, String route) {
-        byte[] response = TestFileUtil.readFileAsString(classPath);
+        byte[] response = fileToByteArray(classPath);
         wireMockServer.stubFor(WireMock.post(route)
                 .withRequestBody(equalToJson("{\"name\":  \"pesho\"}"))
                 .willReturn(aResponse()
